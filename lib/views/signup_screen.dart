@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
+import 'package:instagram_clone_flutter/resources/user_auth.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/widgets/text_field_input.dart';
@@ -99,6 +100,15 @@ class _SignupScreenState extends State<SignupScreen> {
 
           // login button
           InkWell(
+            onTap: () async {
+              String res = await AuthMethods().signUpUser(
+                  email: _emailController.text,
+                  password: _passwordController.text,
+                  username: _usernameController.text,
+                  bio: _bioController.text);
+
+              print(res);
+            },
             child: Container(
               child: const Text("Signup"),
               width: double.infinity,
@@ -120,7 +130,8 @@ class _SignupScreenState extends State<SignupScreen> {
             children: [
               const Text("Already have an account ?"),
               GestureDetector(
-                onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()) ),
+                onTap: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => LoginScreen())),
                 child: const Text(
                   " Login here",
                   style: TextStyle(color: blueColor),
