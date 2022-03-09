@@ -1,7 +1,10 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
+import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone_flutter/resources/user_auth.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/widgets/text_field_input.dart';
 
@@ -15,6 +18,40 @@ class _SignupScreenState extends State<SignupScreen> {
   final TextEditingController _passwordController = TextEditingController();
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _bioController = TextEditingController();
+
+  Uint8List? _image;
+  bool _isLoading = false;
+
+  selectImage() async {
+    Uint8List image = await pickImage(ImageSource.gallery);
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void signupuser() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthMethods().signUpUser(
+      email: _emailController.text,
+      password: _passwordController.text,
+      username: _usernameController.text,
+      bio: _bioController.text,
+      file: _image!,
+    );
+
+    print(res);
+    if (res != "success") {
+      showSnackBar(context, res);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+  }
 
   @override
   void dispose() {
@@ -32,7 +69,7 @@ class _SignupScreenState extends State<SignupScreen> {
             child: Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
+      child: _isLoading ? Center(child: CircularProgressIndicator.adaptive()) : Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(flex: 2, child: Container()),
@@ -47,30 +84,29 @@ class _SignupScreenState extends State<SignupScreen> {
 
           Stack(
             children: [
-              CircleAvatar(
-                radius: 64,
-                backgroundImage: NetworkImage(
-                    "https://images.unsplash.com/photo-1644982654131-79f434ac0c6c?ixlib=rb-1.2.1&ixid=MnwxMjA3fDF8MHxlZGl0b3JpYWwtZmVlZHwxfHx8ZW58MHx8fHw%3D&auto=format&fit=crop&w=500&q=60"),
-              ),
+              _image == null
+                  ? const CircleAvatar(
+                      radius: 64,
+                      backgroundImage: NetworkImage(
+                          "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"),
+                    )
+                  : CircleAvatar(
+                      radius: 64,
+                      backgroundImage: MemoryImage(_image!),
+                    ),
               Positioned(
                   bottom: -10,
                   left: 80,
                   child: IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      selectImage();
+                    },
                     icon: Icon(Icons.add_a_photo),
                   ))
             ],
           ),
 
           const SizedBox(height: 48),
-
-          // email
-          TextFieldInput(
-              textEditingController: _emailController,
-              hintText: "Enter your email",
-              textInputType: TextInputType.emailAddress),
-
-          const SizedBox(height: 24),
 
           // username
           TextFieldInput(
@@ -87,7 +123,14 @@ class _SignupScreenState extends State<SignupScreen> {
               textInputType: TextInputType.text),
 
           const SizedBox(height: 24),
+          
+          // email
+          TextFieldInput(
+              textEditingController: _emailController,
+              hintText: "Enter your email",
+              textInputType: TextInputType.emailAddress),
 
+          const SizedBox(height: 24),
           // password
           TextFieldInput(
             textEditingController: _passwordController,
@@ -100,14 +143,8 @@ class _SignupScreenState extends State<SignupScreen> {
 
           // login button
           InkWell(
-            onTap: () async {
-              String res = await AuthMethods().signUpUser(
-                  email: _emailController.text,
-                  password: _passwordController.text,
-                  username: _usernameController.text,
-                  bio: _bioController.text);
-
-              print(res);
+            onTap: () {
+              signupuser();
             },
             child: Container(
               child: const Text("Signup"),
