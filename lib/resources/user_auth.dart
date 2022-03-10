@@ -49,6 +49,27 @@ class AuthMethods {
     return res;
   }
 
+  Future<String> loginUser(
+      {required String email, required String password}) async {
+    String res = "Some error occured";
+
+    try {
+      if (email.isNotEmpty || password.isNotEmpty) {
+        await _auth.signInWithEmailAndPassword(
+            email: email, password: password);
+        res = "success";
+      } else {
+        res = "Please fill all the fields";
+      }
+    } on FirebaseAuthException catch (e) {
+      res = e.code;
+    } catch (e) {
+      res = e.toString();
+    }
+
+    return res;
+  }
+
   Future<void> signOut() async {
     await _auth.signOut();
   }

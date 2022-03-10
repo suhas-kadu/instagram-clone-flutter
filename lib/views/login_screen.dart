@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
+import 'package:instagram_clone_flutter/resources/user_auth.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/signup_screen.dart';
 import 'package:instagram_clone_flutter/widgets/text_field_input.dart';
 
@@ -12,12 +14,32 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool _isLoading = false;
 
   @override
   void dispose() {
     super.dispose();
     _emailController.dispose();
     _passwordController.dispose();
+  }
+
+  void loginUser() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    String res = await AuthMethods().loginUser(
+        email: _emailController.text, password: _passwordController.text);
+
+    if (res != "success") {
+      showSnackBar(context, res);
+    }
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    print(res);
   }
 
   @override
@@ -27,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
             child: Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 32),
-      child: Column(
+      child: _isLoading ? const Center(child: CircularProgressIndicator()) : Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Flexible(flex: 2, child: Container()),
@@ -60,6 +82,9 @@ class _LoginScreenState extends State<LoginScreen> {
 
           // login button
           InkWell(
+            onTap: (){
+              loginUser();
+            },
             child: Container(
               child: const Text("Login"),
               width: double.infinity,
@@ -81,7 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
             children: [
               const Text("Don't have an account ?"),
               GestureDetector(
-                onTap: () => Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => SignupScreen()) ),
+                onTap: () => Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) => SignupScreen())),
                 child: const Text(
                   " Create here",
                   style: TextStyle(color: blueColor),
