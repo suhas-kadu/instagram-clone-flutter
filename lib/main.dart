@@ -3,12 +3,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
+import 'package:instagram_clone_flutter/providers/user_provider.dart';
 import 'package:instagram_clone_flutter/responsive/responsive_layout.dart';
 import 'package:instagram_clone_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_clone_flutter/responsive/mobile_screen_layout.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/views/signup_screen.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,28 +37,32 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        title: 'Instagram',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData.dark().copyWith(
-          scaffoldBackgroundColor: mobileBackgroundColor,
-        ),
-        home: StreamBuilder(
-            stream: FirebaseAuth.instance.userChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.active) {
-                if (snapshot.hasData) {
-                  return ResponsiveLayout(
-                      webScreenLayout: WebScreenLayout(),
-                      mobileScreenLayout: MobileScreenLayout());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text("${snapshot.error}"));
+    return MultiProvider(
+      providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
+      child: MaterialApp(
+          title: 'Instagram',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData.dark().copyWith(
+            scaffoldBackgroundColor: mobileBackgroundColor,
+          ),
+          home: StreamBuilder(
+              stream: FirebaseAuth.instance.userChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    return ResponsiveLayout(
+                        webScreenLayout: WebScreenLayout(),
+                        mobileScreenLayout: MobileScreenLayout());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text("${snapshot.error}"));
+                  }
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const CircularProgressIndicator();
                 }
-              } else if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator();
-              }
 
-              return LoginScreen();
-            }));
+                return LoginScreen();
+              })),
+    );
   }
 }
