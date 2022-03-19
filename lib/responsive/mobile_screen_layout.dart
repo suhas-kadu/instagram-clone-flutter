@@ -1,9 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:instagram_clone_flutter/models/user.dart' as model;
-import 'package:instagram_clone_flutter/providers/user_provider.dart';
-import 'package:provider/provider.dart';
+import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 
 class MobileScreenLayout extends StatefulWidget {
   @override
@@ -13,30 +11,94 @@ class MobileScreenLayout extends StatefulWidget {
 class _MobileScreenLayoutState extends State<MobileScreenLayout> {
   String username = "";
 
+  int _page = 0;
+  PageController pageController = PageController();
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
-    // getUsername();
   }
 
-// void getUsername() async {
-//   DocumentSnapshot snap = await FirebaseFirestore.instance.collection('users').doc(FirebaseAuth.instance.currentUser!.uid).get();
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+  }
 
-//   print("snap ${snap.data()}");
+  void onPageChanged(int page) {
+    setState(() {
+      _page = page;
+    });
+  }
 
-// setState(() {
-//   username = (snap.data() as Map<String, dynamic>)['username'];
-// });
-
-// }
+  void onIconTapped(int page) {
+    pageController.jumpToPage(page);
+  }
 
   @override
   Widget build(BuildContext context) {
-    model.User user = Provider.of<UserProvider>(context).getUser;
-    print("myuser : ${user.username}");
-    return CircularProgressIndicator.adaptive() : Scaffold(
-      body: Center(child: Text(user.username)),
+    return Scaffold(
+      body: PageView.builder(
+        onPageChanged: onPageChanged,
+        // scrollBehavior: ScrollBehavior(),
+        scrollDirection: Axis.horizontal,
+      controller: pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: screens.length,
+        itemBuilder: (context, index) {
+        return screens[_page];
+      }),
+      bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: mobileBackgroundColor,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
+        elevation: 0.0,
+        onTap: onIconTapped,
+        currentIndex: _page,
+        items: [
+          BottomNavigationBarItem(
+              tooltip: "Home",
+              icon: FaIcon(
+                FontAwesomeIcons.home,
+                color: _page == 0 ? primaryColor : secondaryColor,
+              ),
+              label: "",
+              backgroundColor: mobileBackgroundColor),
+          BottomNavigationBarItem(
+              tooltip: "Search",
+              icon: FaIcon(
+                FontAwesomeIcons.search,
+                color: _page == 1 ? primaryColor : secondaryColor,
+              ),
+              label: "",
+              backgroundColor: mobileBackgroundColor),
+          BottomNavigationBarItem(
+            tooltip: "Add a Post",
+            icon: FaIcon(
+              FontAwesomeIcons.plusSquare,
+              color: _page == 2 ? primaryColor : secondaryColor,
+            ),
+            label: "",
+            backgroundColor: mobileBackgroundColor,
+          ),
+          BottomNavigationBarItem(
+              tooltip: "Notifications",
+              icon: FaIcon(
+                FontAwesomeIcons.bell,
+                color: _page == 3 ? primaryColor : secondaryColor,
+              ),
+              label: "",
+              backgroundColor: mobileBackgroundColor),
+          BottomNavigationBarItem(
+              tooltip: "Profile",
+              icon: FaIcon(
+                FontAwesomeIcons.userCircle,
+                color: _page == 4 ? primaryColor : secondaryColor,
+              ),
+              label: "",
+              backgroundColor: mobileBackgroundColor),
+        ],
+      ),
     );
   }
 }

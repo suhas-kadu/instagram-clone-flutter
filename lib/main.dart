@@ -10,6 +10,7 @@ import 'package:instagram_clone_flutter/responsive/mobile_screen_layout.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/views/signup_screen.dart';
+import 'package:instagram_clone_flutter/views/verify_email_screen.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -50,16 +51,14 @@ class MyApp extends StatelessWidget {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
-                    return ResponsiveLayout(
-                        webScreenLayout: WebScreenLayout(),
-                        mobileScreenLayout: MobileScreenLayout());
+                    return VerifyEmailScreen();
                   } else if (snapshot.hasError) {
                     return Center(child: Text("${snapshot.error}"));
                   }
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
                   return const CircularProgressIndicator();
-                }
+                } 
 
                 return LoginScreen();
               })),

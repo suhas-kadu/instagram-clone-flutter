@@ -35,6 +35,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_svg: ^1.0.3
+  font_awesome_flutter: ^9.2.0
   image_picker: ^0.8.4+10
   provider: ^6.0.2
 

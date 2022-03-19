@@ -9,6 +9,7 @@ import 'package:instagram_clone_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
+import 'package:instagram_clone_flutter/views/verify_email_screen.dart';
 import 'package:instagram_clone_flutter/widgets/text_field_input.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -34,9 +35,19 @@ class _SignupScreenState extends State<SignupScreen> {
   }
 
   void signupuser() async {
+    if (_image == null) {
+      showSnackBar(context, "Please select an image");
+      return;
+    }
+
     setState(() {
       _isLoading = true;
     });
+
+    // if(_image == null) {
+    //   showSnackBar(context, "Please select an image");
+    //   return;
+    // }
 
     String res = await AuthMethods().signUpUser(
       email: _emailController.text,
@@ -50,13 +61,8 @@ class _SignupScreenState extends State<SignupScreen> {
     if (res != "success") {
       showSnackBar(context, res);
     } else {
-      Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(
-              builder: (context) => ResponsiveLayout(
-                    webScreenLayout: WebScreenLayout(),
-                    mobileScreenLayout: MobileScreenLayout(),
-                  )));
+      Navigator.pushReplacement(context,
+          MaterialPageRoute(builder: (context) => VerifyEmailScreen()));
     }
 
     setState(() {
@@ -81,7 +87,7 @@ class _SignupScreenState extends State<SignupScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: _isLoading
-          ? Center(child: CircularProgressIndicator.adaptive())
+          ? const Center(child: CircularProgressIndicator.adaptive())
           : Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
@@ -114,7 +120,7 @@ class _SignupScreenState extends State<SignupScreen> {
                           onPressed: () {
                             selectImage();
                           },
-                          icon: Icon(Icons.add_a_photo),
+                          icon: const Icon(Icons.add_a_photo),
                         ))
                   ],
                 ),
