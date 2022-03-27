@@ -81,7 +81,6 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
     String profileImage,
   ) async {
     try {
-
       setState(() {
         isPostUploaded = true;
       });
@@ -91,6 +90,7 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
 
       if (res == "success") {
         showSnackBar(context, "Post Uploaded Successfully!");
+        clearImage();
         setState(() {
           isPostUploaded = false;
         });
@@ -100,6 +100,12 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+  }
+
+  clearImage() {
+    setState(() {
+      _file = null;
+    });
   }
 
   @override
@@ -123,12 +129,7 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
               leading: IconButton(
                 padding: const EdgeInsets.all(16.0),
                 icon: const FaIcon(FontAwesomeIcons.arrowLeft),
-                onPressed: () {
-                  setState(() {
-                    _file = null;
-                    _descriptionController.clear();
-                  });
-                },
+                onPressed: clearImage,
               ),
               title: const Text("New Post"),
               actions: [
@@ -153,10 +154,12 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
               margin: const EdgeInsets.all(16),
               child: Column(
                 children: [
-                  isPostUploaded ? Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: const LinearProgressIndicator(),
-                  ) : Container(),
+                  isPostUploaded
+                      ? Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: const LinearProgressIndicator(),
+                        )
+                      : Container(),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,7 +180,8 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
                         height: 75,
                         child: TextField(
                           controller: _descriptionController,
-                          decoration: InputDecoration(hintText: "Add a caption"),
+                          decoration:
+                              InputDecoration(hintText: "Add a caption"),
                           maxLines: 8,
                         ),
                       )
