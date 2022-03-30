@@ -17,7 +17,7 @@ class AddAPostScreen extends StatefulWidget {
 
 class _AddAPostScreenState extends State<AddAPostScreen> {
   Uint8List? _file;
-  TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _descriptionController = TextEditingController();
   bool isPostUploaded = false;
 
   _selectImage(BuildContext context) {
@@ -155,9 +155,9 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
               child: Column(
                 children: [
                   isPostUploaded
-                      ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 8.0),
-                          child: const LinearProgressIndicator(),
+                      ? const Padding(
+                          padding: EdgeInsets.symmetric(vertical: 8.0),
+                          child: LinearProgressIndicator(),
                         )
                       : Container(),
                   Row(
@@ -175,13 +175,13 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
                               fit: BoxFit.fill,
                             )),
                       ),
-                      Container(
+                      SizedBox(
                         width: MediaQuery.of(context).size.width - 135,
                         height: 75,
                         child: TextField(
                           controller: _descriptionController,
                           decoration:
-                              InputDecoration(hintText: "Add a caption"),
+                              const InputDecoration(hintText: "Add a caption"),
                           maxLines: 8,
                         ),
                       )

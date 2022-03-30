@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import "package:flutter_svg/svg.dart";
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone_flutter/resources/auth_methods.dart';
-import 'package:instagram_clone_flutter/responsive/mobile_screen_layout.dart';
-import 'package:instagram_clone_flutter/responsive/responsive_layout.dart';
-import 'package:instagram_clone_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
@@ -43,11 +40,6 @@ class _SignupScreenState extends State<SignupScreen> {
     setState(() {
       _isLoading = true;
     });
-
-    // if(_image == null) {
-    //   showSnackBar(context, "Please select an image");
-    //   return;
-    // }
 
     String res = await AuthMethods().signUpUser(
       email: _emailController.text,

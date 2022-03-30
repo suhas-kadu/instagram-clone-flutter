@@ -1,11 +1,12 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/providers/user_provider.dart';
 import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
-import 'package:instagram_clone_flutter/utils/global_variables.dart';
+
 import 'package:instagram_clone_flutter/utils/utils.dart';
+import 'package:instagram_clone_flutter/views/comments_screen.dart';
 import 'package:instagram_clone_flutter/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -15,7 +16,7 @@ import 'package:instagram_clone_flutter/models/user.dart';
 class PostCard extends StatefulWidget {
   final snap;
 
-  PostCard({required this.snap});
+  const PostCard({required this.snap});
 
   @override
   State<PostCard> createState() => _PostCardState();
@@ -30,9 +31,13 @@ class _PostCardState extends State<PostCard> {
     if (res != "success") showSnackBar(context, res);
   }
 
+  addAndViewComments() => Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => CommentsScreen(
+            postId: widget.snap["postId"],
+          )));
+
   @override
   Widget build(BuildContext context) {
-    var date = (widget.snap["datePublished"] as Timestamp).toDate();
     final User user = Provider.of<UserProvider>(context).getUser;
     bool isPostLiked = widget.snap["likes"].contains(user.uid);
 
@@ -140,8 +145,11 @@ class _PostCardState extends State<PostCard> {
               ),
               IconButton(
                   tooltip: "Comment",
-                  onPressed: () {},
-                  icon: const FaIcon(FontAwesomeIcons.comment)),
+                  onPressed: () => addAndViewComments(),
+                  icon: Transform(
+                      alignment: Alignment.center,
+                      transform: Matrix4.rotationY(pi),
+                      child: const FaIcon(FontAwesomeIcons.comment))),
               IconButton(
                   tooltip: "Share",
                   onPressed: () {
@@ -191,7 +199,7 @@ class _PostCardState extends State<PostCard> {
                   height: 8,
                 ),
                 InkWell(
-                    onTap: () {},
+                    onTap: () => addAndViewComments(),
                     child: const Text(
                       "View all comments",
                       style: TextStyle(color: Colors.grey),
@@ -220,6 +228,8 @@ class _PostCardState extends State<PostCard> {
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: const Text("Delete"),
                 onPressed: () async {
+                  String res = await FireStoreMethods()
+                      .deletePost(widget.snap["postId"].toString());
                   Navigator.pop(context);
                 },
               ),
