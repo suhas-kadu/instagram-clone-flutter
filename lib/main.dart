@@ -44,8 +44,8 @@ class MyApp extends StatelessWidget {
           title: 'Instagram',
           debugShowCheckedModeBanner: false,
           theme: ThemeData.dark().copyWith(
-            scaffoldBackgroundColor: mobileBackgroundColor,
-          ),
+              scaffoldBackgroundColor: mobileBackgroundColor,
+              iconTheme: const IconThemeData(size: 24, color: Colors.white)),
           home: StreamBuilder(
               stream: FirebaseAuth.instance.userChanges(),
               builder: (context, snapshot) {
@@ -58,7 +58,7 @@ class MyApp extends StatelessWidget {
                 } else if (snapshot.connectionState ==
                     ConnectionState.waiting) {
                   return const CircularProgressIndicator();
-                } 
+                }
 
                 return LoginScreen();
               })),

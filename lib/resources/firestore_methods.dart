@@ -40,4 +40,34 @@ class FireStoreMethods {
 
     return res;
   }
+
+  Future<String> updateLikes(String postId, String uid, List likes) async {
+    String res = "Some error occurred";
+    try {
+      if (likes.contains(uid)) {
+        await FirebaseFirestore.instance
+            .collection("posts")
+            .doc(postId)
+            .update({
+          'likes': FieldValue.arrayRemove([uid])
+        });
+      } else {
+        await FirebaseFirestore.instance
+            .collection("posts")
+            .doc(postId)
+            .update({
+          'likes':
+            FieldValue.arrayUnion([uid])
+
+        });
+      }
+
+      res = "success";
+    } catch (e) {
+      print("error "+e.toString());
+      return e.toString();
+    }
+
+    return res;
+  }
 }

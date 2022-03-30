@@ -135,7 +135,7 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
               actions: [
                 Padding(
                   padding: const EdgeInsets.symmetric(
-                    vertical: 8.0,
+                    vertical: 16.0,
                     horizontal: 16.0,
                   ),
                   child: IconButton(
