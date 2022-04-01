@@ -5,6 +5,7 @@ import 'package:instagram_clone_flutter/responsive/mobile_screen_layout.dart';
 import 'package:instagram_clone_flutter/responsive/responsive_layout.dart';
 import 'package:instagram_clone_flutter/responsive/web_screen_layout.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/signup_screen.dart';
 import 'package:instagram_clone_flutter/widgets/text_field_input.dart';
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: _isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? circularProgressIndicator
           : Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

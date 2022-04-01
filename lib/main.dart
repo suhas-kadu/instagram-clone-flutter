@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import "package:flutter/material.dart";
 import 'package:instagram_clone_flutter/providers/user_provider.dart';
+import 'package:instagram_clone_flutter/secret.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/views/verify_email_screen.dart';
@@ -14,7 +15,7 @@ void main() async {
   if (kIsWeb) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
-          apiKey: "AIzaSyC1NLRpA3gccePcLs1oZ499frrIExPeHr4",
+          apiKey: firebaseApikey,
           authDomain: "instagram-clone-flutter-1edb6.firebaseapp.com",
           projectId: "instagram-clone-flutter-1edb6",
           storageBucket: "instagram-clone-flutter-1edb6.appspot.com",

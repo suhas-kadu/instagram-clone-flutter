@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/add_a_post_screen.dart';
 import 'package:instagram_clone_flutter/widgets/post_card.dart';
@@ -42,7 +43,7 @@ class FeedScreen extends StatelessWidget {
         builder: (context,
             AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator.adaptive());
+            return circularProgressIndicator;
           }
           if (snapshot.hasError) {
             return showSnackBar(context, snapshot.error.toString());

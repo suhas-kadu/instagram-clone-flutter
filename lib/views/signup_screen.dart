@@ -4,6 +4,7 @@ import "package:flutter_svg/svg.dart";
 import 'package:image_picker/image_picker.dart';
 import 'package:instagram_clone_flutter/resources/auth_methods.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/views/verify_email_screen.dart';
@@ -79,7 +80,7 @@ class _SignupScreenState extends State<SignupScreen> {
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: _isLoading
-          ? const Center(child: CircularProgressIndicator.adaptive())
+          ? circularProgressIndicator
           : Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [

@@ -4,6 +4,7 @@ import 'package:instagram_clone_flutter/models/comment.dart';
 import 'package:instagram_clone_flutter/models/user.dart';
 import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/widgets/comment_card.dart';
 import 'package:provider/provider.dart';
@@ -43,11 +44,8 @@ class _CommentsScreenState extends State<CommentsScreen> {
               .snapshots(),
           builder: (context,
               AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot) {
-// AsyncSnapshot<QuerySnapshot<Map<String, dynamic>>> snapshot
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator.adaptive(),
-              );
+              return circularProgressIndicator;
             }
 
             if (snapshot.hasError) {

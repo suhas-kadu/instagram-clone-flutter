@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 pickImage(ImageSource imageSource) async {
@@ -33,8 +34,7 @@ Widget loadNetworkImage(
     [double? width, double? height]) {
   return CachedNetworkImage(
     imageUrl: imgUrl,
-    placeholder: (context, placeHolderText) =>
-        const Center(child: CircularProgressIndicator()),
+    placeholder: (context, placeHolderText) => circularProgressIndicator,
     errorWidget: (context, imgUrl, error) {
       return showSnackBar(context, error.toString());
     },
