@@ -1,12 +1,11 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/providers/user_provider.dart';
 import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
-
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/comments_screen.dart';
+import 'package:instagram_clone_flutter/views/profile_screen.dart';
 import 'package:instagram_clone_flutter/widgets/like_animation.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/services.dart';
@@ -37,6 +36,11 @@ class _PostCardState extends State<PostCard> {
           )));
 
   @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final User user = Provider.of<UserProvider>(context).getUser;
     bool isPostLiked = widget.snap["likes"].contains(user.uid);
@@ -47,7 +51,11 @@ class _PostCardState extends State<PostCard> {
         children: [
           GestureDetector(
             onTap: () {
-              print("Go to User Profile");
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: ((context) =>
+                          ProfileScreen(uid: widget.snap["uid"]))));
             },
             child: ListTile(
               contentPadding: const EdgeInsets.symmetric(vertical: 12),
@@ -122,7 +130,6 @@ class _PostCardState extends State<PostCard> {
                 smallLike: true,
                 onEnd: () {},
                 child: IconButton(
-                  // padding: EdgeInsets.zero,
                   tooltip: isPostLiked ? "Unlike" : "Like",
                   onPressed: () async {
                     await didLikeUpdate(widget.snap["postId"].toString(),

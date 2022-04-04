@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/global_variables.dart';
+import 'package:instagram_clone_flutter/views/profile_screen.dart';
 import 'package:instagram_clone_flutter/views/search_feed_screen.dart';
 
 class SearchScreen extends StatefulWidget {
@@ -89,14 +90,16 @@ class _SearchScreenState extends State<SearchScreen> {
                     if (!snapshot.hasData) {
                       return circularProgressIndicator;
                     }
-                    // if (!snapshot.hasError) {
-                    //   showSnackBar(context, snapshot.error.toString());
-                    // }
 
                     return ListView.builder(
                       itemCount: (snapshot.data! as dynamic).docs.length,
                       itemBuilder: (BuildContext context, int index) {
                         return InkWell(
+                          onTap: () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                  builder: (context) => ProfileScreen(
+                                      uid: (snapshot.data! as dynamic)
+                                          .docs[index]['uid']))),
                           child: ListTile(
                               leading: CircleAvatar(
                             backgroundImage: NetworkImage(
@@ -114,10 +117,6 @@ class _SearchScreenState extends State<SearchScreen> {
                     SearchFeedScreen(keyword: "wildlife"),
                     SearchFeedScreen(keyword: "sports"),
                     SearchFeedScreen(keyword: "shopping"),
-                    // Text(""),
-                    // Text(""),
-                    // Text("wildlife"),
-                    // Text("wildlife"),
                   ],
                 )),
     );

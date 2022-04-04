@@ -7,6 +7,7 @@ import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/add_a_post_screen.dart';
 import 'package:instagram_clone_flutter/widgets/post_card.dart';
+import 'package:instagram_clone_flutter/widgets/stories_list.dart';
 
 class FeedScreen extends StatelessWidget {
   @override
@@ -45,16 +46,25 @@ class FeedScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return circularProgressIndicator;
           }
-          if (snapshot.hasError) {
-            return showSnackBar(context, snapshot.error.toString());
-          }
+          // if (snapshot.hasError) {
+          //   return showSnackBar(context, snapshot.error.toString());
+          // }
 
-          return ListView.builder(
-              // check this code again
-              itemCount: snapshot.data!.docs.length,
-              itemBuilder: (context, index) {
-                return PostCard(snap: snapshot.data!.docs[index].data());
-              });
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                StoriesList(),
+                ListView.builder(
+                    // check this code again
+                    shrinkWrap: true,
+                    physics: ClampingScrollPhysics(),
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      return PostCard(snap: snapshot.data!.docs[index].data());
+                    }),
+              ],
+            ),
+          );
         },
       ),
     );

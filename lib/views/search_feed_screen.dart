@@ -45,9 +45,9 @@ class _SearchFeedScreenState extends State<SearchFeedScreen> {
           likes: image["likes"].toString(),
           username: image["user"]["username"]);
 
-      setState(() {
-        images.add(searchImage);
-      });
+      // setState(() {
+      images.add(searchImage);
+      // });
     });
 
     print(images[0].imageUrl);
@@ -95,8 +95,6 @@ class _SearchFeedScreenState extends State<SearchFeedScreen> {
                       });
                     },
                     child: CachedNetworkImage(
-                      // height: MediaQuery.of(context).size.height / 2,
-                      // width: MediaQuery.of(context).size.width / 3,
                       fit: BoxFit.fill,
                       imageUrl: images[index].imageUrl,
                     ),

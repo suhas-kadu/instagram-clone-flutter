@@ -100,6 +100,7 @@ class _AddAPostScreenState extends State<AddAPostScreen> {
     } catch (e) {
       showSnackBar(context, e.toString());
     }
+    _descriptionController.clear();
   }
 
   clearImage() {
