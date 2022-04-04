@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/global_variables.dart';
-import 'package:instagram_clone_flutter/utils/utils.dart';
 import 'package:instagram_clone_flutter/views/add_a_post_screen.dart';
 import 'package:instagram_clone_flutter/widgets/post_card.dart';
 import 'package:instagram_clone_flutter/widgets/stories_list.dart';
@@ -12,9 +11,12 @@ import 'package:instagram_clone_flutter/widgets/stories_list.dart';
 class FeedScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
+        backgroundColor:
+            width > webScreenSize ? webBackgroundColor : mobileBackgroundColor,
         centerTitle: true,
         leading: IconButton(
             padding: const EdgeInsets.only(
@@ -34,6 +36,7 @@ class FeedScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
+              tooltip: "Direct Messages",
               padding: const EdgeInsets.only(top: 8, right: 16),
               onPressed: () {},
               icon: const FaIcon(FontAwesomeIcons.facebookMessenger))
@@ -46,18 +49,14 @@ class FeedScreen extends StatelessWidget {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return circularProgressIndicator;
           }
-          // if (snapshot.hasError) {
-          //   return showSnackBar(context, snapshot.error.toString());
-          // }
 
           return SingleChildScrollView(
             child: Column(
               children: [
-                StoriesList(),
+                const StoriesList(),
                 ListView.builder(
-                    // check this code again
                     shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
                       return PostCard(snap: snapshot.data!.docs[index].data());

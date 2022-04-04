@@ -12,7 +12,7 @@ List<Widget> screens = [
   FeedScreen(),
   const SearchScreen(),
   AddAPostScreen(),
-  NotificationsScreen(),
+  const NotificationsScreen(),
   ProfileScreen(
     uid: FirebaseAuth.instance.currentUser!.uid,
   ),

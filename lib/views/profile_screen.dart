@@ -2,8 +2,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/models/user.dart' as model;
 import 'package:instagram_clone_flutter/providers/user_provider.dart';
+import 'package:instagram_clone_flutter/resources/auth_methods.dart';
+import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
@@ -70,6 +73,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       isFollowing = userData["followers"]
           .contains(FirebaseAuth.instance.currentUser!.uid);
+
+      if (this.mounted) {
+        setState(() {});
+      }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
@@ -87,8 +94,83 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return circularProgressIndicator;
     } else {
       return Scaffold(
-        endDrawer: const Drawer(
-          backgroundColor: mobileBackgroundColor,
+        endDrawer: Drawer(
+          // backgroundColor: mobileBackgroundColor,
+          child: ListView(
+            children: [
+              const ListTile(
+                leading: Icon(
+                  Icons.settings,
+                  size: 28,
+                ),
+                title: Text("Settings"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.archive,
+                  size: 28,
+                ),
+                title: Text("Archive"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.history,
+                  size: 28,
+                ),
+                title: Text("Your Activity"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.qr_code,
+                  size: 28,
+                ),
+                title: Text("QR code"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.bookmark_outline,
+                  size: 28,
+                ),
+                title: Text("Save"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.list,
+                  size: 28,
+                ),
+                title: Text("Close Friends"),
+                trailing: Icon(
+                  Icons.star,
+                  size: 24,
+                  color: Colors.orangeAccent,
+                ),
+              ),
+              const ListTile(
+                leading: Icon(
+                  Icons.star_border,
+                  size: 28,
+                ),
+                title: Text("Favourites"),
+              ),
+              const ListTile(
+                leading: Icon(
+                  FontAwesomeIcons.userPlus,
+                  size: 20,
+                ),
+                title: Text("Discover People"),
+              ),
+              ListTile(
+                onTap: () async {
+                  await AuthMethods().signOut();
+                },
+                leading: const Icon(
+                  Icons.logout,
+                  size: 28,
+                ),
+                title: const Text("Sign out"),
+              ),
+            ],
+          ),
         ),
         appBar: AppBar(
           backgroundColor: mobileBackgroundColor,
@@ -143,15 +225,47 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     borderColor: primaryColor,
                                   )
                                 : (isFollowing
-                                    ? const FollowButton(
+                                    ? FollowButton(
                                         text: "Unfollow",
                                         bgColor: Colors.blue,
-                                        borderColor: primaryColor,
-                                      )
-                                    : const FollowButton(
+                                        borderColor: Colors.blue,
+                                        function: () async {
+                                          String res = await FireStoreMethods()
+                                              .followUnfollowUser(
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            userData['uid'],
+                                          );
+
+                                          setState(() {
+                                            isFollowing = false;
+                                            followers--;
+                                          });
+                                          if (res != "success") {
+                                            showSnackBar(context, res);
+                                          }
+                                        })
+                                    : FollowButton(
                                         text: "Follow",
                                         bgColor: Colors.transparent,
                                         borderColor: primaryColor,
+                                        function: () async {
+                                          String res = await FireStoreMethods()
+                                              .followUnfollowUser(
+                                            FirebaseAuth
+                                                .instance.currentUser!.uid,
+                                            userData['uid'],
+                                          );
+
+                                          setState(() {
+                                            isFollowing = true;
+                                            followers++;
+                                          });
+
+                                          if (res != "success") {
+                                            showSnackBar(context, res);
+                                          }
+                                        },
                                       ))
                           ],
                         ),
@@ -168,7 +282,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 "    " + userData["bio"] + "\n",
                 style: TextStyle(fontSize: 16),
               ),
-              Divider(),
+              const Divider(),
               FutureBuilder(
                   future: FirebaseFirestore.instance
                       .collection("posts")
@@ -181,7 +295,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                     return GridView.builder(
                       shrinkWrap: true,
-                      physics: ClampingScrollPhysics(),
+                      physics: const ClampingScrollPhysics(),
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
@@ -212,10 +326,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         Text(
           num.toString(),
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
         ),
         Text(label,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 16,
             )),
       ],

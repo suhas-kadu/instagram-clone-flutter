@@ -196,7 +196,7 @@ class _PostCardState extends State<PostCard> {
                             fontWeight: FontWeight.bold, fontSize: 16),
                       ),
                       TextSpan(
-                          text: widget.snap["description"],
+                          text: " " + widget.snap["description"],
                           style: const TextStyle(
                               fontWeight: FontWeight.normal, fontSize: 16)),
                     ],

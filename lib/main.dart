@@ -9,7 +9,6 @@ import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/views/verify_email_screen.dart';
 import 'package:provider/provider.dart';
-import 'package:flutter/services.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -40,7 +39,7 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [ChangeNotifierProvider(create: (_) => UserProvider())],
       child: MaterialApp(
-          title: 'Instagram',
+          title: 'Instagram Clone',
           debugShowCheckedModeBanner: false,
           theme: ThemeData.dark().copyWith(
               scaffoldBackgroundColor: mobileBackgroundColor,

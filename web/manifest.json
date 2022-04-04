@@ -1,6 +1,6 @@
 {
-    "name": "instagram_clone_flutter",
-    "short_name": "instagram_clone_flutter",
+    "name": "Instagram Clone",
+    "short_name": "Instagram Clone",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
