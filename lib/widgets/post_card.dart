@@ -49,7 +49,10 @@ class _PostCardState extends State<PostCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          GestureDetector(
+          // GestureDetector(
+
+          // child:
+          ListTile(
             onTap: () {
               Navigator.push(
                   context,
@@ -57,30 +60,32 @@ class _PostCardState extends State<PostCard> {
                       builder: ((context) =>
                           ProfileScreen(uid: widget.snap["uid"]))));
             },
-            child: ListTile(
-              contentPadding: const EdgeInsets.symmetric(vertical: 12),
-              leading: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: CircleAvatar(
-                  backgroundImage: NetworkImage(
-                    widget.snap["profileImage"],
-                  ),
+            contentPadding: const EdgeInsets.symmetric(vertical: 12),
+            leading: Padding(
+              padding: const EdgeInsets.only(left: 12.0),
+              child: CircleAvatar(
+                backgroundColor: Colors.white,
+                backgroundImage: NetworkImage(
+                    "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"),
+                foregroundImage: NetworkImage(
+                  widget.snap["profileImage"],
                 ),
-              ),
-              title: Text(widget.snap["username"]),
-              trailing: IconButton(
-                tooltip: "More Options",
-                padding: EdgeInsets.zero,
-                icon: const FaIcon(
-                  Icons.more_vert,
-                  size: 28,
-                ),
-                onPressed: () {
-                  _showOptions(context);
-                },
               ),
             ),
+            title: Text(widget.snap["username"]),
+            trailing: IconButton(
+              tooltip: "More Options",
+              padding: EdgeInsets.zero,
+              icon: const FaIcon(
+                Icons.more_vert,
+                size: 28,
+              ),
+              onPressed: () {
+                _showOptions(context);
+              },
+            ),
           ),
+          // ),
           GestureDetector(
             onDoubleTap: () async {
               await didLikeUpdate(widget.snap["postId"].toString(), user.uid,
@@ -225,21 +230,24 @@ class _PostCardState extends State<PostCard> {
   }
 
   _showOptions(BuildContext context) {
+    final User user = Provider.of<UserProvider>(context, listen: false).getUser;
     return showDialog(
         context: context,
         builder: (context) {
           return SimpleDialog(
             children: [
-              SimpleDialogOption(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                child: const Text("Delete"),
-                onPressed: () async {
-                  String res = await FireStoreMethods()
-                      .deletePost(widget.snap["postId"].toString());
-                  Navigator.pop(context);
-                },
-              ),
+              widget.snap['uid'].toString() == user.uid
+                  ? SimpleDialogOption(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      child: const Text("Delete"),
+                      onPressed: () async {
+                        String res = await FireStoreMethods()
+                            .deletePost(widget.snap["postId"].toString());
+                        Navigator.pop(context);
+                      },
+                    )
+                  : Container(),
               SimpleDialogOption(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),

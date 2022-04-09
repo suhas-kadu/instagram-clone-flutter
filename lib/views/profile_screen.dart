@@ -10,6 +10,7 @@ import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
+import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/widgets/follow_button.dart';
 import 'package:provider/provider.dart';
 
@@ -32,21 +33,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   void initState() {
-    // if (this.mounted) {
-    getData();
-    // }
     super.initState();
-    // getData();
+    getData();
   }
 
   @override
   void dispose() {
-    widget.isMount = false;
     super.dispose();
   }
 
   getData() async {
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         loading = true;
       });
@@ -63,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       var postSnap = await FirebaseFirestore.instance
           .collection("posts")
-          .where('uid', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+          .where('uid', isEqualTo: widget.uid)
           .get();
 
       postLength = postSnap.docs.length;
@@ -74,14 +71,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       isFollowing = userData["followers"]
           .contains(FirebaseAuth.instance.currentUser!.uid);
 
-      if (this.mounted) {
+      if (mounted) {
         setState(() {});
       }
     } catch (e) {
       showSnackBar(context, e.toString());
     }
 
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         loading = false;
       });
@@ -150,7 +147,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Icons.star_border,
                   size: 28,
                 ),
-                title: Text("Favourites"),
+                title: Text("Favorites"),
               ),
               const ListTile(
                 leading: Icon(
@@ -162,6 +159,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ListTile(
                 onTap: () async {
                   await AuthMethods().signOut();
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => LoginScreen()));
                 },
                 leading: const Icon(
                   Icons.logout,
