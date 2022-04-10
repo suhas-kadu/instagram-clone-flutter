@@ -71,7 +71,6 @@ class FireStoreMethods {
     String res = "Some error occurred";
 
     try {
-      String commentId = const Uuid().v1();
       if (comment.description.isNotEmpty) {
         // if the likes list contains the user uid, we need to remove it
         String commentId = const Uuid().v1();

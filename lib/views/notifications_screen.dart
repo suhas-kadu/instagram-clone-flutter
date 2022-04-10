@@ -20,7 +20,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
   bool loading = false;
 
   Future<void> getImages() async {
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         loading = true;
       });
@@ -54,7 +54,7 @@ class _NotificationsScreenState extends State<NotificationsScreen> {
         print(images[0].imageUrl);
       }
     });
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         loading = false;
       });

@@ -67,7 +67,7 @@ class AuthMethods {
 
   Future<String> loginUser(
       {required String email, required String password}) async {
-    String res = "Some error occured";
+    String res = "Some error occurred";
 
     try {
       if (email.isNotEmpty || password.isNotEmpty) {

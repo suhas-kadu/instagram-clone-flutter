@@ -1,11 +1,8 @@
 import 'dart:convert';
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_fadein/flutter_fadein.dart';
 import 'package:http/http.dart' as http;
 import 'package:instagram_clone_flutter/models/search_image.dart';
 import 'package:instagram_clone_flutter/secret.dart';
-import 'package:instagram_clone_flutter/utils/global_variables.dart';
 import 'package:instagram_clone_flutter/widgets/story.dart';
 
 class StoriesList extends StatefulWidget {
@@ -53,7 +50,7 @@ class _StoriesListState extends State<StoriesList> {
         print(images[0].imageUrl);
       }
     });
-    if (this.mounted) {
+    if (mounted) {
       setState(() {
         loading = false;
       });

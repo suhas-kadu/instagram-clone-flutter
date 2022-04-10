@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:instagram_clone_flutter/providers/user_provider.dart';
@@ -24,6 +25,8 @@ class PostCard extends StatefulWidget {
 class _PostCardState extends State<PostCard> {
   bool isLikeAnimating = false;
 
+  int commentLen = 0;
+
   didLikeUpdate(String postId, String uid, List likes) async {
     String res = await FireStoreMethods().updateLikes(postId, uid, likes);
 
@@ -38,6 +41,24 @@ class _PostCardState extends State<PostCard> {
   @override
   void initState() {
     super.initState();
+    fetchCommentLen();
+  }
+
+  fetchCommentLen() async {
+    try {
+      QuerySnapshot snap = await FirebaseFirestore.instance
+          .collection('posts')
+          .doc(widget.snap['postId'])
+          .collection('comments')
+          .get();
+      commentLen = snap.docs.length;
+    } catch (err) {
+      showSnackBar(
+        context,
+        err.toString(),
+      );
+    }
+    setState(() {});
   }
 
   @override
@@ -49,9 +70,6 @@ class _PostCardState extends State<PostCard> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // GestureDetector(
-
-          // child:
           ListTile(
             onTap: () {
               Navigator.push(
@@ -62,16 +80,14 @@ class _PostCardState extends State<PostCard> {
             },
             contentPadding: const EdgeInsets.symmetric(vertical: 12),
             leading: Padding(
-              padding: const EdgeInsets.only(left: 12.0),
-              child: CircleAvatar(
-                backgroundColor: Colors.white,
-                backgroundImage: NetworkImage(
-                    "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"),
-                foregroundImage: NetworkImage(
-                  widget.snap["profileImage"],
-                ),
-              ),
-            ),
+                padding: const EdgeInsets.only(left: 12.0),
+                child: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: const NetworkImage(
+                        "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"),
+                    foregroundImage: NetworkImage(
+                      widget.snap["profileImage"],
+                    ))),
             title: Text(widget.snap["username"]),
             trailing: IconButton(
               tooltip: "More Options",
@@ -85,7 +101,6 @@ class _PostCardState extends State<PostCard> {
               },
             ),
           ),
-          // ),
           GestureDetector(
             onDoubleTap: () async {
               await didLikeUpdate(widget.snap["postId"].toString(), user.uid,
@@ -210,12 +225,14 @@ class _PostCardState extends State<PostCard> {
                 const SizedBox(
                   height: 8,
                 ),
-                InkWell(
-                    onTap: () => addAndViewComments(),
-                    child: const Text(
-                      "View all comments",
-                      style: TextStyle(color: Colors.grey),
-                    )),
+                commentLen == 0
+                    ? Container()
+                    : InkWell(
+                        onTap: () => addAndViewComments(),
+                        child: Text(
+                          "View all $commentLen comments",
+                          style: const TextStyle(color: Colors.grey),
+                        )),
                 const SizedBox(
                   height: 6,
                 ),
@@ -223,7 +240,10 @@ class _PostCardState extends State<PostCard> {
                     .format((widget.snap["datePublished"]).toDate()))
               ],
             ),
-          )
+          ),
+          const SizedBox(
+            height: 32,
+          ),
         ],
       ),
     );
@@ -245,6 +265,11 @@ class _PostCardState extends State<PostCard> {
                         String res = await FireStoreMethods()
                             .deletePost(widget.snap["postId"].toString());
                         Navigator.pop(context);
+                        if (res == "success") {
+                          showSnackBar(context, "Post Deleted successfully");
+                        } else {
+                          showSnackBar(context, res);
+                        }
                       },
                     )
                   : Container(),
@@ -263,9 +288,11 @@ class _PostCardState extends State<PostCard> {
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 child: const Text("View Profile"),
-                onPressed: () async {
-                  print("view profile pressed");
-                  Navigator.pop(context);
+                onPressed: () {
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) =>
+                          ProfileScreen(uid: widget.snap["uid"])));
+                  // Navigator.of(context).pop();
                 },
               ),
               SimpleDialogOption(

@@ -77,7 +77,7 @@ class _SignupScreenState extends State<SignupScreen> {
     return Scaffold(
         body: _isLoading
             ? circularProgressIndicator
-            : Container(
+            : SizedBox(
                 height: MediaQuery.of(context).size.height,
                 child: SingleChildScrollView(
                   padding: EdgeInsets.symmetric(horizontal: 32),

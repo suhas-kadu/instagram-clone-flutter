@@ -2,17 +2,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:instagram_clone_flutter/models/user.dart' as model;
-import 'package:instagram_clone_flutter/providers/user_provider.dart';
-import 'package:instagram_clone_flutter/resources/auth_methods.dart';
 import 'package:instagram_clone_flutter/resources/firestore_methods.dart';
 import 'package:instagram_clone_flutter/utils/colors.dart';
 import 'package:instagram_clone_flutter/utils/global_variables.dart';
+import 'package:instagram_clone_flutter/utils/static_drawer.dart';
 import 'package:instagram_clone_flutter/utils/utils.dart';
-import 'package:instagram_clone_flutter/views/login_screen.dart';
 import 'package:instagram_clone_flutter/widgets/follow_button.dart';
-import 'package:provider/provider.dart';
 
 class ProfileScreen extends StatefulWidget {
   final String uid;
@@ -91,86 +86,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       return circularProgressIndicator;
     } else {
       return Scaffold(
-        endDrawer: Drawer(
-          // backgroundColor: mobileBackgroundColor,
-          child: ListView(
-            children: [
-              const ListTile(
-                leading: Icon(
-                  Icons.settings,
-                  size: 28,
-                ),
-                title: Text("Settings"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.archive,
-                  size: 28,
-                ),
-                title: Text("Archive"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.history,
-                  size: 28,
-                ),
-                title: Text("Your Activity"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.qr_code,
-                  size: 28,
-                ),
-                title: Text("QR code"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.bookmark_outline,
-                  size: 28,
-                ),
-                title: Text("Save"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.list,
-                  size: 28,
-                ),
-                title: Text("Close Friends"),
-                trailing: Icon(
-                  Icons.star,
-                  size: 24,
-                  color: Colors.orangeAccent,
-                ),
-              ),
-              const ListTile(
-                leading: Icon(
-                  Icons.star_border,
-                  size: 28,
-                ),
-                title: Text("Favorites"),
-              ),
-              const ListTile(
-                leading: Icon(
-                  FontAwesomeIcons.userPlus,
-                  size: 20,
-                ),
-                title: Text("Discover People"),
-              ),
-              ListTile(
-                onTap: () async {
-                  await AuthMethods().signOut();
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => LoginScreen()));
-                },
-                leading: const Icon(
-                  Icons.logout,
-                  size: 28,
-                ),
-                title: const Text("Sign out"),
-              ),
-            ],
-          ),
-        ),
+        endDrawer: const StaticDrawer(),
         appBar: AppBar(
           backgroundColor: mobileBackgroundColor,
           leading: FirebaseAuth.instance.currentUser!.uid == widget.uid
@@ -199,8 +115,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     CircleAvatar(
-                      backgroundColor: Colors.blue,
-                      backgroundImage: NetworkImage(userData["photoUrl"]),
+                      backgroundColor: Colors.white,
+                      backgroundImage: const NetworkImage(
+                          "https://t4.ftcdn.net/jpg/02/15/84/43/240_F_215844325_ttX9YiIIyeaR7Ne6EaLLjMAmy4GvPC69.jpg"),
+                      foregroundImage: NetworkImage(userData["photoUrl"]),
                       radius: 40,
                     ),
                     Expanded(
